@@ -1,0 +1,5 @@
+title: My GitHub Pages Site
+description: A website hosted on GitHub Pages
+baseurl: "" # the base hostname & protocol for your site
+url: "" # the base URL for your site
+theme: jekyll-theme-primer
