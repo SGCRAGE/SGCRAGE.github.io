@@ -4,23 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Home Runs</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-    </style>
 </head>
 <body>
     <h1>Daily Home Runs</h1>
@@ -33,40 +16,43 @@
                 <th>Home Runs</th>
             </tr>
         </thead>
-        <tbody>
-            <!-- Data will be inserted here -->
-        </tbody>
+        <tbody></tbody>
     </table>
-
     <script>
-        // Function to fetch and display data
-        async function fetchAndDisplayData() {
-            const url = 'https://zuriteapi.com/homers/api/dailyhomeruns/?days=0&format=json';
+        async function fetchHomeRuns() {
             try {
-                const response = await fetch(url);
+                const response = await fetch('https://zuriteapi.com/homers/api/dailyhomeruns/?days=0&format=json');
                 const data = await response.json();
-
-                const tableBody = document.querySelector('#homeRunsTable tbody');
-                tableBody.innerHTML = ''; // Clear any existing data
-
-                // Iterate through the data and create table rows
-                data.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${item.date}</td>
-                        <td>${item.player}</td>
-                        <td>${item.team}</td>
-                        <td>${item.home_runs}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
+                
+                // Get the table body element
+                const tbody = document.querySelector('#homeRunsTable tbody');
+                
+                // Check if data exists and is in expected format
+                if (data && Array.isArray(data)) {
+                    // Clear any existing rows
+                    tbody.innerHTML = '';
+                    
+                    // Loop through each item in the data array
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.date || 'N/A'}</td>
+                            <td>${item.player || 'N/A'}</td>
+                            <td>${item.team || 'N/A'}</td>
+                            <td>${item.home_runs || 'N/A'}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    console.error('Unexpected data format:', data);
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
 
-        // Call the function to fetch and display data
-        fetchAndDisplayData();
+        // Fetch data when the page loads
+        window.onload = fetchHomeRuns;
     </script>
 </body>
 </html>
